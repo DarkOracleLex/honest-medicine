@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.24.0-alpine
+    container_name: honest_medicine_nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./src/laravel/public:/var/www/public
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+    networks:
+      - honest_medicine
+
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    container_name: honest_medicine_php
+    volumes:
+      - ./src/laravel:/var/www
+    depends_on:
+      - postgresql
+    networks:
+      - honest_medicine
+
+  postgresql:
+    image: postgres:15.3-alpine
+    container_name: honest_medicine_postgresql
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: honest_medicine
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    networks:
+      - honest_medicine
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: honest_medicine_adminer
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgresql
+    environment:
+      ADMINER_DEFAULT_SERVER: postgresql
+    networks:
+      - honest_medicine
+
+networks:
+  honest_medicine:
+    name: honest_medicine
+
+volumes:
+  postgresql_data:
+    name: honest_medicine_postgresql_data
