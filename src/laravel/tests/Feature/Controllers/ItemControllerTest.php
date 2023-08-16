@@ -16,22 +16,20 @@ class ItemControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)->get('api/item')->assertOk()->assertJsonCount(Item::all()->count(), 'data');
-    }
+        $this->get('api/item', headers: ['Accept' => 'application/json'])->assertUnauthorized();
 
-//    public function testStoreConflict()
-//    {
-//        $user = User::factory()->create();
-//
-//        $this->actingAs($user)->post('api/item')->assertConflict();
-//    }
+        $this->actingAs($user)->get('api/item', headers: ['Accept' => 'application/json'])
+            ->assertOk()->assertJsonCount(Item::all()->count(), 'data');
+    }
 
     public function testStore()
     {
         $user = User::factory()->create();
         $item = Item::factory()->definition();
 
-        $response = $this->actingAs($user)->post('api/item', $item);
+        $this->post('api/item', $item, ['Accept' => 'application/json'])->assertUnauthorized();
+
+        $response = $this->actingAs($user)->post('api/item', $item, ['Accept' => 'application/json']);
         $response->assertOk();
 
         $this->assertDatabaseHas('items', $item);
@@ -47,7 +45,10 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->create();
         $item = Item::factory()->create();
 
-        $this->actingAs($user)->get("api/item/$item->id")->assertOk()->assertJsonFragment($item->toArray());
+        $this->get("api/item/$item->id", headers: ['Accept' => 'application/json'])->assertUnauthorized();
+
+        $this->actingAs($user)->get("api/item/$item->id", headers: ['Accept' => 'application/json'])
+            ->assertOk()->assertJsonFragment($item->toArray());
     }
 
     public function testUpdate()
@@ -57,7 +58,11 @@ class ItemControllerTest extends TestCase
 
         $updatingData = collect(Item::factory()->definition())->only('name', 'key');
 
-        $this->actingAs($user)->put("api/item/$item->id", $updatingData->toArray())->assertOk();
+        $this->put("api/item/$item->id", $updatingData->toArray(), ['Accept' => 'application/json'])
+            ->assertUnauthorized();
+
+        $this->actingAs($user)->put("api/item/$item->id", $updatingData->toArray(), ['Accept' => 'application/json'])
+            ->assertOk();
 
         $this->assertDatabaseHas('items', [
             'id' => $item->id,
@@ -77,7 +82,9 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->create();
         $item = Item::factory()->create();
 
-        $this->actingAs($user)->delete("api/item/$item->id")->assertOk();
+        $this->delete("api/item/$item->id", headers: ['Accept' => 'application/json'])->assertUnauthorized();
+
+        $this->actingAs($user)->delete("api/item/$item->id", headers: ['Accept' => 'application/json'])->assertOk();
 
         $this->assertDatabaseMissing('items', [
             'id' => $item->id,
