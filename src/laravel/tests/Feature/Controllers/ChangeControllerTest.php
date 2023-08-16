@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Feature\Controllers;
+namespace Tests\Feature\Controllers;
 
 use App\Models\Change;
 use App\Models\User;
