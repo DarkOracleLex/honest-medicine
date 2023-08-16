@@ -16,9 +16,4 @@ class Item extends Model
         'name',
         'key',
     ];
-
-    public function getModelName()
-    {
-        return Str::studly(Str::singular($this->getTable()));
-    }
 }

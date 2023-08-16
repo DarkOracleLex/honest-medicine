@@ -8,6 +8,6 @@ class ChangeController extends Controller
 {
     public function index()
     {
-        return Change::all();
+        return $this->success(Change::all());
     }
 }
