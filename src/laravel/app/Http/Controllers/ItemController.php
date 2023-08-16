@@ -4,36 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Item\CreateItemRequest;
 use App\Http\Requests\Item\UpdateItemRequest;
-use App\Models\Item;
+use App\Services\ItemService;
 
 class ItemController extends Controller
 {
+    private ItemService $itemService;
+
+    public function __construct()
+    {
+        $this->itemService = new ItemService();
+    }
+
     public function index()
     {
-        return Item::all();
+        return $this->success($this->itemService->findAll());
+    }
+
+    public function show(int $item)
+    {
+        return $this->success($this->itemService->findOne($item));
     }
 
     public function store(CreateItemRequest $request)
     {
-        return Item::create($request->validated());
+        return $this->success($this->itemService->create($request->validated()));
     }
 
-    public function show(Item $item)
+    public function update(UpdateItemRequest $request, int $item)
     {
-        return $item;
+        return $this->success($this->itemService->update($request->validated(), $item));
     }
 
-    public function update(UpdateItemRequest $request, Item $item)
+    public function destroy(int $item)
     {
-        $item->update($request->validated());
-
-        return $item;
-    }
-
-    public function destroy(Item $item)
-    {
-        $item->delete();
-
-        return response()->json();
+        return $this->success($this->itemService->delete($item));
     }
 }

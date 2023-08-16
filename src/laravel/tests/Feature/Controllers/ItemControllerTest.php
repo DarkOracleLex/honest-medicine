@@ -4,25 +4,42 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Item;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ItemControllerTest extends TestCase
 {
+    use WithFaker;
+
     public function testIndex()
     {
         $user = User::factory()->create();
 
-        $this->actingAs($user)->get('api/item')->assertOk()->assertJsonCount(Item::all()->count());
+        $this->actingAs($user)->get('api/item')->assertOk()->assertJsonCount(Item::all()->count(), 'data');
     }
+
+//    public function testStoreConflict()
+//    {
+//        $user = User::factory()->create();
+//
+//        $this->actingAs($user)->post('api/item')->assertConflict();
+//    }
 
     public function testStore()
     {
         $user = User::factory()->create();
         $item = Item::factory()->definition();
 
-        $this->actingAs($user)->post('api/item', $item)->assertCreated();
+        $response = $this->actingAs($user)->post('api/item', $item);
+        $response->assertOk();
 
         $this->assertDatabaseHas('items', $item);
+        $this->assertDatabaseHas('changes', [
+            'event_type' => 'created',
+            'model' => Model::getActualClassNameForMorph(Item::class),
+            'model_id' => $response->json('data.id'),
+        ]);
     }
 
     public function testShow()
@@ -30,7 +47,7 @@ class ItemControllerTest extends TestCase
         $user = User::factory()->create();
         $item = Item::factory()->create();
 
-        $this->actingAs($user)->get("api/item/$item->id")->assertOk()->assertJson($item->toArray());
+        $this->actingAs($user)->get("api/item/$item->id")->assertOk()->assertJsonFragment($item->toArray());
     }
 
     public function testUpdate()
@@ -47,6 +64,12 @@ class ItemControllerTest extends TestCase
             'name' => $updatingData['name'],
             'key' => $updatingData['key'],
         ]);
+        $this->assertDatabaseHas('changes', [
+            'event_type' => 'updated',
+            'model' => Model::getActualClassNameForMorph(Item::class),
+            'model_id' => $item->id,
+            'changes' => json_encode($updatingData),
+        ]);
     }
 
     public function testDestroy()
@@ -58,6 +81,11 @@ class ItemControllerTest extends TestCase
 
         $this->assertDatabaseMissing('items', [
             'id' => $item->id,
+        ]);
+        $this->assertDatabaseHas('changes', [
+            'event_type' => 'deleted',
+            'model' => Model::getActualClassNameForMorph(Item::class),
+            'model_id' => $item->id,
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Change;
 use App\Models\Item;
+use Illuminate\Database\Eloquent\Model;
 
 class ItemObserver
 {
@@ -11,7 +12,7 @@ class ItemObserver
     {
         Change::create([
             'event_type' => 'created',
-            'model' => $item->getModelName(),
+            'model' => Model::getActualClassNameForMorph(Item::class),
             'model_id' => $item->id,
         ]);
     }
@@ -20,7 +21,7 @@ class ItemObserver
     {
         Change::create([
             'event_type' => 'updated',
-            'model' => $item->getModelName(),
+            'model' => Model::getActualClassNameForMorph(Item::class),
             'model_id' => $item->id,
             'changes' => $item->getChanges(),
         ]);
@@ -30,7 +31,7 @@ class ItemObserver
     {
         Change::create([
             'event_type' => 'deleted',
-            'model' => $item->getModelName(),
+            'model' => Model::getActualClassNameForMorph(Item::class),
             'model_id' => $item->id
         ]);
     }
