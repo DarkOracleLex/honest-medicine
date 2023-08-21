@@ -16,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('item', ItemController::class);
+    Route::apiResource('item', ItemController::class)->where(['item' => '[0-9]+']);
     Route::get('change', [ChangeController::class, 'index']);
 });
