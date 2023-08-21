@@ -53,6 +53,19 @@ services:
     networks:
       - honest_medicine
 
+  vue:
+    build:
+      context: .
+      dockerfile: ./docker/vue/Dockerfile
+    container_name: honest_medicine_vue
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./src/vue:/var/www
+    networks:
+      - honest_medicine
+
+
 networks:
   honest_medicine:
     name: honest_medicine
