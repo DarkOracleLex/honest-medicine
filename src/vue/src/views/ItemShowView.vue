@@ -25,11 +25,11 @@
       <div style="color: red" v-if="this.errorMessage">{{ this.errorMessage }}</div>
       <div>
         <label for="userId">Name:</label>
-        <input type="text" id="name" v-model="itemUpdateData.name">
+        <input :value="itemData.name" @input="event => itemUpdateData.name = event.target.value" type="text" id="name">
       </div>
       <div>
         <label for="title">Key: </label>
-        <input type="text" id="key" v-model="itemUpdateData.key">
+        <input :value="itemData.key" @input="event => itemUpdateData.key = event.target.value" type="text" id="key">
       </div>
       <button>Update Item</button>
     </form>

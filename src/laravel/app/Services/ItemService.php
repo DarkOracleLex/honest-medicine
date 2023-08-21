@@ -39,19 +39,15 @@ class ItemService
         return Item::create($validatedValues);
     }
 
-    public function update(array $validatedValues, int $id): Item
+    public function update(array $validatedValues, Item $model): Item
     {
-        $model = $this->findOne($id);
-
         $model->update($validatedValues);
 
         return $model;
     }
 
-    public function delete(int $id): Item
+    public function delete(item $model): Item
     {
-        $model = $this->findOne($id);
-
         abort_if(
             !$model->delete(),
             Response::HTTP_CONFLICT,
