@@ -21,19 +21,6 @@ class ItemService
         return $models;
     }
 
-    public function findOne(int $id): Item
-    {
-        $model = Item::find($id);
-
-        abort_if(
-            !$model,
-            Response::HTTP_NOT_FOUND,
-            __('http-statuses.404')
-        );
-
-        return $model;
-    }
-
     public function create(array $validatedValues): Item
     {
         return Item::create($validatedValues);
