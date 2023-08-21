@@ -8,4 +8,4 @@
 - cp .env.example .env
 - php artisan app:install
 - php artisan key:generate
-- ввести токен в postman
+- ввести токен в ./src/vue/.env

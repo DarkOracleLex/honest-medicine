@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Item;
+use App\Models\Change;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,7 +10,7 @@ class ChangeService
 {
     public function findAll(): Collection
     {
-        $models = Item::all();
+        $models = Change::all();
 
         abort_if(
             $models->isEmpty(),

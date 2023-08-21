@@ -3,17 +3,20 @@
 
 <template>
   <main>
-    <h1>Changes:</h1>
+    <h1>Items:</h1>
     <div>
-      <div style="border: 1px solid white; padding: 5px 10px; margin: 10px 0" v-for="item in changes">
+      <div style="border: 1px solid white; padding: 5px 10px; margin: 10px 0" v-for="item in items">
         <div>
-          Модель: {{ item.model }}
+          Id: {{ item.id }}
         </div>
         <div>
-          Событие: {{ item.event_type }}
+          Имя: {{ item.name }}
         </div>
-        <div v-if="item.changes">
-          Изменения: {{ item.changes }}
+        <div>
+          Ключ: {{ item.key }}
+        </div>
+        <div>
+          Создано: {{ item.created_at }}
         </div>
       </div>
     </div>
@@ -26,18 +29,18 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      changes: [],
+      items: [],
     };
   },
   mounted() {
-    axios.get(`${import.meta.env.VITE_BASE_URL}/change`, {
+    axios.get(`${import.meta.env.VITE_BASE_URL}/item`, {
       headers: {
         'authorization': `Bearer ${import.meta.env.VITE_TOKEN}`
       }
     })
         .then((response) => {
           console.log(response.data.data)
-          this.changes = response.data.data
+          this.items = response.data.data
         })
         .catch(error => console.log(error));
   }
