@@ -15,6 +15,6 @@ class ChangeControllerTest extends TestCase
         $this->get('api/change', headers: ['Accept' => 'application/json'])->assertUnauthorized();
 
         $this->actingAs($user)->get('api/change', headers: ['Accept' => 'application/json'])
-            ->assertOk()->assertJsonCount(Change::all()->count(), 'data');
+            ->assertOk()->assertJsonFragment(['data' => Change::all()->toArray()]);
     }
 }

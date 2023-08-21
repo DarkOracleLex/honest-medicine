@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Change;
 use App\Services\ChangeService;
 
 class ChangeController extends Controller

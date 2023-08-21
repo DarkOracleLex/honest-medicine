@@ -19,7 +19,7 @@ class ItemControllerTest extends TestCase
         $this->get('api/item', headers: ['Accept' => 'application/json'])->assertUnauthorized();
 
         $this->actingAs($user)->get('api/item', headers: ['Accept' => 'application/json'])
-            ->assertOk()->assertJsonCount(Item::all()->count(), 'data');
+            ->assertOk()->assertJsonFragment(['data' => Item::all()->toArray()]);
     }
 
     public function testStore()
