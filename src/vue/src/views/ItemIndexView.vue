@@ -5,7 +5,8 @@
   <main>
     <h1>Items:</h1>
     <div>
-      <div style="border: 1px solid white; padding: 5px 10px; margin: 10px 0" v-for="item in items">
+      <a v-bind:href="'/item/' + item.id" v-for="item in items"
+         style="display:block; border: 1px solid white; padding: 5px 10px; margin: 10px 0">
         <div>
           Id: {{ item.id }}
         </div>
@@ -18,7 +19,7 @@
         <div>
           Создано: {{ item.created_at }}
         </div>
-      </div>
+      </a>
     </div>
   </main>
 </template>

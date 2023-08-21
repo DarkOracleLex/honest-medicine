@@ -14,7 +14,6 @@ import Home from "@/components/Home.vue";
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/item">Items</RouterLink>
         <RouterLink to="/item/store">Store item</RouterLink>
-        <RouterLink to="/item/update">Update item</RouterLink>
       </nav>
     </div>
   </header>
